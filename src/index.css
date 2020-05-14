@@ -138,3 +138,9 @@ code {
     padding-left: 0;
   }
 }
+
+/*Users*/
+.users .content{
+  padding-left: 300px;
+  margin-top: 25px;
+}
