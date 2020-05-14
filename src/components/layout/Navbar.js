@@ -3,9 +3,21 @@ import { NavLink } from 'react-router-dom'
 import M from 'materialize-css';
 
 class Navbar extends Component {
+    constructor(props){
+        super(props);
+        this.signOut=this.signOut.bind(this);
+    }
+
     componentDidMount(){
         const sidenav = document.querySelectorAll('.sidenav');
         M.Sidenav.init(sidenav,{});
+    }
+
+    signOut(){
+        localStorage.removeItem("token");
+        localStorage.removeItem("email");
+        localStorage.removeItem("name");
+        console.log(localStorage);
     }
 
     render() {
@@ -36,6 +48,7 @@ class Navbar extends Component {
                     <li>
                         <NavLink class="white-text" to='/utilities'><i class="material-icons left white-text">widgets</i>Utilities</NavLink>
                     </li>
+                    <li><a href="/" onClick={this.signOut} class="white-text">Logout</a></li>
                 </ul>
             </div>
         )

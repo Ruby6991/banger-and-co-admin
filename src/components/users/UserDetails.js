@@ -1,15 +1,15 @@
 import React from 'react'
 
-const UserDetails = () => {
+const UserDetails = ({user}) => {
     return (
         <tr>
-            <td>ruby300@gmail.com</td>
-            <td>Ruby Mikealson</td>
-            <td>1994/05/06</td>
-            <td>Los Angeles, CA</td>
-            <td>07777231645</td>
-            <td>New <br/> <button>Blacklist</button></td>
-            <td><button>Docs</button></td>
+            <td class="teal lighten-4"><i><b>{user.email}</b></i></td>
+            <td>{user.firstName+' '+user.lastName}</td>
+            <td>{user.dateOfBirth!==null?(user.dateOfBirth.split('T')[0]):("")}</td>
+            <td>{user.address}</td>
+            <td>{user.phoneNo}</td>
+            <td>{user.customerState} <br/> <button class="waves-effect waves-light btn-small teal lighten-3">Blacklist</button></td>
+            <td><button class="waves-effect btn-flat teal lighten-3 white-text">Docs</button></td>
         </tr>
     )
 }
