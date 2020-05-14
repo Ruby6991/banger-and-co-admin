@@ -147,3 +147,15 @@ code {
 .users .nav-wrapper{
   padding-left: 300px;
 }
+
+/*Vehicles*/
+.vehicles .content{
+  padding-left: 300px;
+  margin-top: 25px;
+}
+.vehicles .nav-wrapper{
+  padding-left: 300px;
+}
+.vehicles .btn-flat{
+  margin: 10px;
+}
