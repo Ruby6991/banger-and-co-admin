@@ -159,3 +159,13 @@ code {
 .vehicles .btn-flat{
   margin: 10px;
 }
+.vehicles .modal { 
+  width: 75% !important ; 
+  max-height: 85% !important ; 
+}
+.vehicles .modal-footer .btn-flat{
+  margin: 10px;
+}
+.vehicles .responsive-table img{
+  max-height: 200px;
+}

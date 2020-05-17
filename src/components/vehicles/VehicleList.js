@@ -1,17 +1,58 @@
 import React, { Component } from 'react'
 import Navbar from '../layout/Navbar'
 import VehicleDetails from './VehicleDetails'
+import M from 'materialize-css'
 const axios = require("axios")
+
 
 class VehicleList extends Component {
     constructor(props){
         super(props);
         this.state={
-            vehicles:[]
+            vehicles:[],
+            model:'',
+            rates:'',
+            description:'',
+            category:'',
+            quantity:'',
+            fuelType:'',
+            mileage:'',
+            serviceDate:'',
+            availability:'',
+            licenseNo:'',
+            imgUrl:''
         }
+        // this.handleDate = this.handleDate.bind(this);
     }
+
     componentDidMount(){
+        const modal = document.querySelectorAll('.modal');
+        M.Modal.init(modal, {});
+
+        const select = document.querySelectorAll('select');
+        M.FormSelect.init(select, {});
+
         const that = this;
+
+        // const datepicker=document.querySelectorAll('.datepicker');
+        // M.Datepicker.init(datepicker,{
+        //     selectMonths: true, 
+        //     selectYears: 100, 
+        //     format: "yyyy-mm-dd",
+        //     setDefaultDate: true,
+        //     autoClose:true,
+        //     onSet: that.handleDate,
+        //     onSelect: function(date) {
+        //         var splitDate = date.toString().split("-"),
+        //             newdate = splitDate[0].split(" "),
+        //             editedDate = newdate[1]+"-"+newdate[2]+'-'+newdate[3],
+        //             finalDate = new Date(editedDate);
+        //         that.setState({
+        //             serviceDate : finalDate
+        //         })
+        //       }
+        // });
+
         console.log(localStorage);
         const token = 'Bearer '+ localStorage.token;
         const headersInfo = {
@@ -32,6 +73,59 @@ class VehicleList extends Component {
             console.log(error.response);
         })
     }
+
+    // handleDate = (date) => {
+    //     var splitDate = date.toString().split("-"),
+    //                 newdate = splitDate[0].split(" "),
+    //                 editedDate = newdate[1]+"-"+newdate[2]+'-'+newdate[3],
+    //                 finalDate = new Date(editedDate);
+    //     this.setState({
+    //         serviceDate: finalDate
+    //     })
+    // }
+
+    handleChange = (e) => {
+        this.setState({
+            [e.target.id]: e.target.value
+        })
+    }
+
+    handleSubmit = (e) => {
+        e.preventDefault();
+        console.log(this.state);
+        const token = 'Bearer '+ localStorage.token;
+        const headersInfo = {
+            Authorization:token
+        }
+        
+        const data = {
+            model:this.state.model,
+            rates:this.state.rates,
+            description:this.state.description,
+            category:this.state.category,
+            quantity:this.state.quantity,
+            fuelType:this.state.fuelType,
+            mileage:this.state.mileage,
+            // serviceDate:this.state.serviceDate,
+            availability:true,
+            licenseNo:this.state.licenseNo,
+            imgUrl:this.state.imgUrl
+        }
+        console.log(data);
+
+        axios.put("http://localhost:8080/AddVehicle",data,{
+            headers:headersInfo
+        })
+            .then(function(res){
+                console.log("Vehicle Added successfully!");
+                alert("Vehicle Added successfully!");
+                window.location.reload();
+            }).catch(function(error){
+                console.log("Vehicle addition un-successful!\nError : ",error.response);
+                alert("Vehicle addition un-successful!");
+         })
+    }
+
     render() {
         return (
             <div class="vehicles">
@@ -52,27 +146,67 @@ class VehicleList extends Component {
                         <div class="col s12">
                             <div class="card card-bg">
                                 <span class="card-title center">Manage Vehicles</span>
-                                <button class="waves-effect btn-flat teal lighten-3 white-text"><b>Add New Vehicle</b></button>
+
+                                {/* <!-- Modal Trigger --> */}
+                                <button data-target="modal1" class="modal-trigger waves-effect btn-flat teal lighten-3 white-text">Add New Vehicle</button>
+
+                                {/* <!-- Modal1 Structure --> */}
+                                <div id="modal1" class="modal">
+                                    <div class="modal-content">
+                                        <h4>Add New Vehicle</h4>
+                                        <form >
+                                            <input type="text" placeholder="Model" id="model" onChange={this.handleChange}/>
+                                            <input type="text" placeholder="Rates" id="rates" onChange={this.handleChange}/>
+                                            <input type="text" placeholder="Description" id="description" onChange={this.handleChange}/>
+
+                                            <div class="input-field">
+                                                <select id="category" onChange={this.handleChange}>
+                                                <option value="" disabled selected>Choose Category</option>
+                                                <option value="Small Town Cars">Small Town Cars</option>
+                                                <option value="Family Vehicles">Family Vehicles</option>
+                                                <option value="Vans">Vans</option>
+                                                </select>
+                                            </div>
+
+                                            <input type="tel" placeholder="Quantity" id="quantity" onChange={this.handleChange}/>
+
+                                            <div class="input-field">
+                                                <select id="fuelType" onChange={this.handleChange}>
+                                                <option value="" disabled selected>Choose Fuel Type</option>
+                                                <option value="Petrol">Petrol</option>
+                                                <option value="Diesel">Diesel</option>
+                                                <option value="Hybrid">Hybrid</option>
+                                                </select>
+                                            </div>
+
+                                            <input type="text" placeholder="Mileage" id="mileage" onChange={this.handleChange} />
+                                            {/* <input type="text" class="datepicker" placeholder="Service Date" id="serviceDate" onChange={this.handleDate}/> */}
+                                            <input type="text" placeholder="License No" id="licenseNo" onChange={this.handleChange} />
+                                            <input type="text" placeholder="Image" id="imgUrl" onChange={this.handleChange} />
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button class="modal-close waves-effect waves-green btn-flat teal lighten-3" onClick={this.handleSubmit} >Add</button>
+                                        <button class="modal-close waves-effect waves-green btn-flat teal lighten-3">Cancel</button>
+                                    </div>
+                                </div>
+
                                 <table class="responsive-table highlight">
                                     <thead>
                                         <tr>
                                             <th class="teal lighten-3">Vehicle ID</th>
                                             <th class=" teal lighten-4">Model</th>
-                                            <th class="teal lighten-3">Rates</th>
-                                            <th class=" teal lighten-4">Description</th>
-                                            <th class="teal lighten-3">Quantity</th>
-                                            <th class=" teal lighten-4">Fuel Type</th>
-                                            <th class="teal lighten-3">Mileage</th>
-                                            <th class=" teal lighten-4">Service Date</th>
-                                            <th class="teal lighten-3">Availability</th>
-                                            <th class=" teal lighten-4">License No</th>
-                                            <th class="teal lighten-3">Image</th>
+                                            <th class=" teal lighten-3">Category</th>
+                                            <th class="teal lighten-4">Rates</th>
+                                            <th class=" teal lighten-3" style={{width: 300+"px"}} >Description</th>
+                                            <th class="teal lighten-4">Additional Information</th>
                                         </tr>
                                     </thead>
 
                                     <tbody>
                                         { this.state.vehicles && this.state.vehicles.map(vehicle => 
                                         {
+
                                             return(
                                                 <VehicleDetails vehicle={vehicle} key={vehicle.id} />
                                             )
