@@ -22,7 +22,6 @@ class VehicleList extends Component {
             licenseNo:'',
             imgUrl:''
         }
-        // this.handleDate = this.handleDate.bind(this);
     }
 
     componentDidMount(){
@@ -34,24 +33,24 @@ class VehicleList extends Component {
 
         const that = this;
 
-        // const datepicker=document.querySelectorAll('.datepicker');
-        // M.Datepicker.init(datepicker,{
-        //     selectMonths: true, 
-        //     selectYears: 100, 
-        //     format: "yyyy-mm-dd",
-        //     setDefaultDate: true,
-        //     autoClose:true,
-        //     onSet: that.handleDate,
-        //     onSelect: function(date) {
-        //         var splitDate = date.toString().split("-"),
-        //             newdate = splitDate[0].split(" "),
-        //             editedDate = newdate[1]+"-"+newdate[2]+'-'+newdate[3],
-        //             finalDate = new Date(editedDate);
-        //         that.setState({
-        //             serviceDate : finalDate
-        //         })
-        //       }
-        // });
+        const datepicker=document.querySelectorAll('.datepicker');
+        M.Datepicker.init(datepicker,{
+            selectMonths: true, 
+            selectYears: 100, 
+            format: "yyyy-mm-dd",
+            setDefaultDate: true,
+            autoClose:true,
+            onSet:that.handleDate,
+            onSelect: function(date) {
+                var splitDate = date.toString().split("-"),
+                    newdate = splitDate[0].split(" "),
+                    editedDate = newdate[1]+"-"+newdate[2]+'-'+newdate[3],
+                    finalDate = new Date(editedDate);
+                that.setState({
+                    serviceDate : finalDate
+                })
+              }
+        });
 
         console.log(localStorage);
         const token = 'Bearer '+ localStorage.token;
@@ -72,22 +71,55 @@ class VehicleList extends Component {
         }).catch(function(error){
             console.log(error.response);
         })
+
+
     }
 
-    // handleDate = (date) => {
-    //     var splitDate = date.toString().split("-"),
-    //                 newdate = splitDate[0].split(" "),
-    //                 editedDate = newdate[1]+"-"+newdate[2]+'-'+newdate[3],
-    //                 finalDate = new Date(editedDate);
-    //     this.setState({
-    //         serviceDate: finalDate
-    //     })
-    // }
+    handleDate = (date) => {
+        var splitDate = date.toString().split("-"),
+                    newdate = splitDate[0].split(" "),
+                    editedDate = newdate[1]+"-"+newdate[2]+'-'+newdate[3],
+                    finalDate = new Date(editedDate);
+        this.setState({
+            serviceDate: finalDate
+        })
+    }
 
     handleChange = (e) => {
         this.setState({
             [e.target.id]: e.target.value
         })
+    }
+
+    handleUpdate = (e) => {
+        e.preventDefault();
+        console.log(this.props.vehicle);
+        const config = {
+            headers:{
+                Authorization:'Bearer '+ localStorage.token
+            }
+        }
+        
+        const data = {
+            rates:this.state.rates,
+            description:this.state.description,
+            quantity:this.state.quantity,
+            mileage:this.state.mileage,
+            serviceDate:this.state.serviceDate,
+            imgUrl:this.state.imgUrl
+        }
+        console.log(data);
+
+        axios.put("http://localhost:8080/UpdateVehicle/"+ this.state.activeItemId,data,config)
+            .then(function(res){
+                console.log("Profile updated successfully!");
+                alert("Profile updated successfully!");
+                // window.location.reload();
+            }).catch(function(error){
+                console.log("Profile update un-successful!\nError : ",error.response);
+                alert("Profile update un-successful!");
+
+         })
     }
 
     handleSubmit = (e) => {
@@ -106,7 +138,7 @@ class VehicleList extends Component {
             quantity:this.state.quantity,
             fuelType:this.state.fuelType,
             mileage:this.state.mileage,
-            // serviceDate:this.state.serviceDate,
+
             availability:true,
             licenseNo:this.state.licenseNo,
             imgUrl:this.state.imgUrl
@@ -180,7 +212,6 @@ class VehicleList extends Component {
                                             </div>
 
                                             <input type="text" placeholder="Mileage" id="mileage" onChange={this.handleChange} />
-                                            {/* <input type="text" class="datepicker" placeholder="Service Date" id="serviceDate" onChange={this.handleDate}/> */}
                                             <input type="text" placeholder="License No" id="licenseNo" onChange={this.handleChange} />
                                             <input type="text" placeholder="Image" id="imgUrl" onChange={this.handleChange} />
                                         </form>
@@ -195,18 +226,17 @@ class VehicleList extends Component {
                                     <thead>
                                         <tr>
                                             <th class="teal lighten-3">Vehicle ID</th>
-                                            <th class=" teal lighten-4">Model</th>
+                                            <th class=" teal lighten-4">Model & Description</th>
                                             <th class=" teal lighten-3">Category</th>
-                                            <th class="teal lighten-4">Rates</th>
-                                            <th class=" teal lighten-3" style={{width: 300+"px"}} >Description</th>
-                                            <th class="teal lighten-4">Additional Information</th>
+                                            <th class="teal lighten-4"style={{width: 100+"px"}}>Rates</th>
+                                            <th class=" teal lighten-3" style={{width: 200+"px"}} >Image</th>
+                                            <th class="teal lighten-4" style={{width: 200+"px"}}>Additional Information</th>
                                         </tr>
                                     </thead>
 
                                     <tbody>
                                         { this.state.vehicles && this.state.vehicles.map(vehicle => 
                                         {
-
                                             return(
                                                 <VehicleDetails vehicle={vehicle} key={vehicle.id} />
                                             )

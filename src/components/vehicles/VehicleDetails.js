@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import M from "materialize-css";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 const axios = require("axios");
 
 
@@ -18,6 +16,9 @@ class VehicleDetails extends Component {
             imgUrl:this.props.vehicle.imgUrl
         }
         this.handleDate = this.handleDate.bind(this);
+        this.handleChange = this.handleChange.bind(this);
+        this.handleDelete = this.handleDelete.bind(this);
+        this.handleUpdate = this.handleUpdate.bind(this);
     }
 
     componentDidMount(){
@@ -27,27 +28,28 @@ class VehicleDetails extends Component {
         const select = document.querySelectorAll('select');
         M.FormSelect.init(select, {});
 
-        const that = this;
-        const datepicker=document.querySelectorAll('.datepicker');
-        M.Datepicker.init(datepicker,{
-            selectMonths: true, 
-            selectYears: 100, 
-            format: "yyyy-mm-dd",
-            setDefaultDate: true,
-            autoClose:true,
-            onSet:that.handleDate,
-            onSelect: function(date) {
-                var splitDate = date.toString().split("-"),
-                    newdate = splitDate[0].split(" "),
-                    editedDate = newdate[1]+"-"+newdate[2]+'-'+newdate[3],
-                    finalDate = new Date(editedDate);
-                that.setState({
-                    serviceDate : finalDate
-                })
-              }
-        });
+        // const that = this;
+        // const datepicker=document.querySelectorAll('.datepicker');
+        // M.Datepicker.init(datepicker,{
+        //     selectMonths: true, 
+        //     selectYears: 100, 
+        //     format: "yyyy-mm-dd",
+        //     setDefaultDate: true,
+        //     autoClose:true,
+        //     onSet:that.handleDate,
+        //     onSelect: function(date) {
+        //         var splitDate = date.toString().split("-"),
+        //             newdate = splitDate[0].split(" "),
+        //             editedDate = newdate[1]+"-"+newdate[2]+'-'+newdate[3],
+        //             finalDate = new Date(editedDate);
+        //         that.setState({
+        //             serviceDate : finalDate
+        //         })
+        //       }
+        // });
 
-        localStorage.setItem("vehicleID",this.props.vehicle.id);
+        var elems = document.querySelectorAll('.datepicker');
+        M.Datepicker.init(elems, {});
     }
 
     handleDate = (date) => {
@@ -66,9 +68,8 @@ class VehicleDetails extends Component {
         })
     }
 
-    handleSubmit = (e) => {
-        e.preventDefault();
-        console.log(this.props.vehicle);
+    handleUpdate = () => {
+        console.log(this.state);
         const config = {
             headers:{
                 Authorization:'Bearer '+ localStorage.token
@@ -85,14 +86,15 @@ class VehicleDetails extends Component {
         }
         console.log(data);
 
-        axios.put("http://localhost:8080/UpdateVehicle/"+ localStorage.vehicleID,data,config)
+        axios.put("http://localhost:8080/UpdateVehicle/"+ this.state.id,data,config)
             .then(function(res){
                 console.log("Profile updated successfully!");
                 alert("Profile updated successfully!");
-                window.location.reload();
+                // window.location.reload();
             }).catch(function(error){
                 console.log("Profile update un-successful!\nError : ",error.response);
                 alert("Profile update un-successful!");
+
          })
     }
 
@@ -103,7 +105,7 @@ class VehicleDetails extends Component {
             }
         }
         if (window.confirm("Are you sure you want to delete this vehicle?")) {
-            axios.delete("http://localhost:8080/DeleteVehicle/"+ localStorage.vehicleID,config)
+            axios.delete("http://localhost:8080/DeleteVehicle/"+ this.state.id,config)
             .then(function(res){
                 console.log("Vehicle deleted successfully!");
                 alert("Vehicle deleted successfully!");
@@ -114,8 +116,7 @@ class VehicleDetails extends Component {
         })
           } else {
             alert("Vehicle deletion cancelled");
-          }          
-        
+          }             
     }
 
     render() {
@@ -123,60 +124,36 @@ class VehicleDetails extends Component {
             <tr>
                 <td class="center">
                     <i><b>{this.props.vehicle.id}</b></i><br/><br/>
-                    <button data-target="modal2" class="modal-trigger waves-effect waves-light btn-small red lighten-2">Update</button><br/><br/>
-
-                    {/* <!-- Modal2 Structure --> */}
-                    <div id="modal2" class="modal">
-                        <div class="modal-content">
-                            <h4>Update Vehicle</h4>
-                            <form>
-                                <div class="input-field">
-                                    <input type="text" placeholder={this.state.rates} id="rates" onChange={this.handleChange}/>
-                                    <label for="rates">Rates</label>
-                                </div>
-                                <div class="input-field">
-                                    <input type="text" placeholder={this.state.description} id="description" onChange={this.handleChange}/>
-                                    <label for="description">Description</label>
-                                </div>
-                                <div class="input-field">
-                                    <input type="tel" placeholder={this.state.quantity} id="quantity" onChange={this.handleChange}/>
-                                    <label for="quantity">Quantity</label>
-                                </div>
-                                <div class="input-field">
-                                    <input type="text" placeholder={this.state.mileage} id="mileage" onChange={this.handleChange} />
-                                    <label for="mileage">Mileage</label>
-                                </div>
-                                <div class="input-field">
-                                    <input type="text" class="datepicker" placeholder={this.state.serviceDate} id="serviceDate" onChange={this.handleChange}/>
-                                    <label for="serviceDate">Service Date</label>
-                                </div>
-                                <div class="input-field">
-                                    <input type="text" placeholder={this.state.imgUrl} id="imgUrl" onChange={this.handleChange} />
-                                    <label for="serviceDate">Image URL</label>
-                                </div>
-                               
-                                
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button class="modal-close waves-effect waves-green btn-flat teal lighten-3" onClick={this.handleSubmit} >Update</button>
-                            <button class="modal-close waves-effect waves-green btn-flat teal lighten-3">Cancel</button>
-                        </div>
-                    </div>
-
+                    <button class="waves-effect waves-light btn-small red lighten-2" onClick={this.handleUpdate}>Update</button><br/><br/>
                     <button class="waves-effect waves-light btn-small red lighten-2" onClick={this.handleDelete}>Delete</button>
                 </td>
-                <td class="teal lighten-4 center">{this.props.vehicle.model}</td>
+                <td class="teal lighten-4 center">
+                    {this.props.vehicle.model}<br/><br/>
+                    <textarea style={{width:200+"px",height:125+"px"}} type="text" placeholder={this.state.description} id="description" onChange={this.handleChange} />
+
+                </td>
                 <td class="center">{this.props.vehicle.category}</td>
-                <td class="teal lighten-4 center">{this.state.rates} Euros</td>
-                <td><img class="responsive-img" src={this.state.imgUrl} alt=""/><br/>
-                    {this.state.description}</td>
+                <td class="teal lighten-4 center">
+                    <input type="text" placeholder={this.state.rates} id="rates" onChange={this.handleChange} style={{width: 50+"px",height:25+"px"}}/> Euros
+                </td>
+                <td>
+                    <img class="responsive-img" src={this.state.imgUrl} alt=""/><br/>
+                    <input type="text" placeholder="New Image URL" id="imgUrl" onChange={this.handleChange} style={{height:25+"px"}}/>
+                </td>
                 
-                <td class="teal lighten-4"><b>Quantity: </b>{this.state.quantity}
+                <td class="teal lighten-4"><b>Quantity: </b><input type="tel" placeholder={this.state.quantity} id="quantity" onChange={this.handleChange} style={{width: 50+"px",height:25+"px"}}/>
                 <br/><b>Fuel Type: </b>{this.props.vehicle.fuelType}
-                <br/><b>Mileage: </b>{this.state.mileage}
-                <br/><b>Service Date: </b>{this.state.serviceDate!==null?(this.state.serviceDate.toString().split('T')[0]):("")}
-                <br/><b>Availability: </b>{this.props.vehicle.availability===true?"Avaialable":"Unavaialable"}
+                <br/><b>Mileage: </b><input type="text" placeholder={this.state.mileage} id="mileage" onChange={this.handleChange} style={{width: 50+"px",height:25+"px"}}/>
+                <br/><b>Service Date: </b>
+                <input 
+                    type="text" 
+                    class="datepicker" 
+                    placeholder={this.state.serviceDate!==null?(this.state.serviceDate.toString().split('T')[0]):("")} 
+                    id="serviceDate" 
+                    onChange={this.handleChange} 
+                    style={{width: 100+"px",height:25+"px"}}
+                />
+                <br/><b>Availability: </b>{this.props.vehicle.availability===true?"Available":"Unavailable"}
                 <br/><b>License No: </b>{this.props.vehicle.licenseNo}</td>
 
             </tr>

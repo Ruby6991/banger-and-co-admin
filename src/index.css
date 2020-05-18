@@ -169,3 +169,7 @@ code {
 .vehicles .responsive-table img{
   max-height: 200px;
 }
+.vehicles ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: #e57373 ;
+  opacity: 1; /* Firefox */
+}
