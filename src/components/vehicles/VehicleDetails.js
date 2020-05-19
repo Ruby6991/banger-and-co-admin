@@ -15,7 +15,7 @@ class VehicleDetails extends Component {
             serviceDate:this.props.vehicle.serviceDate,
             imgUrl:this.props.vehicle.imgUrl
         }
-        this.handleDate = this.handleDate.bind(this);
+        // this.handleDate = this.handleDate.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
         this.handleUpdate = this.handleUpdate.bind(this);
@@ -48,19 +48,17 @@ class VehicleDetails extends Component {
         //       }
         // });
 
-        var elems = document.querySelectorAll('.datepicker');
-        M.Datepicker.init(elems, {});
     }
 
-    handleDate = (date) => {
-        var splitDate = date.toString().split("-"),
-                    newdate = splitDate[0].split(" "),
-                    editedDate = newdate[1]+"-"+newdate[2]+'-'+newdate[3],
-                    finalDate = new Date(editedDate);
-        this.setState({
-            serviceDate: finalDate
-        })
-    }
+    // handleDate = (date) => {
+    //     var splitDate = date.toString().split("-"),
+    //                 newdate = splitDate[0].split(" "),
+    //                 editedDate = newdate[1]+"-"+newdate[2]+'-'+newdate[3],
+    //                 finalDate = new Date(editedDate);
+    //     this.setState({
+    //         serviceDate: finalDate
+    //     })
+    // }
 
     handleChange = (e) => {
         this.setState({
@@ -88,13 +86,12 @@ class VehicleDetails extends Component {
 
         axios.put("http://localhost:8080/UpdateVehicle/"+ this.state.id,data,config)
             .then(function(res){
-                console.log("Profile updated successfully!");
-                alert("Profile updated successfully!");
-                // window.location.reload();
+                console.log("Vehicle updated successfully!");
+                alert("Vehicle updated successfully!");
+                window.location.reload();
             }).catch(function(error){
-                console.log("Profile update un-successful!\nError : ",error.response);
-                alert("Profile update un-successful!");
-
+                console.log("Vehicle update un-successful!\nError : ",error.response);
+                alert("Vehicle update un-successful!");
          })
     }
 
@@ -150,7 +147,6 @@ class VehicleDetails extends Component {
                     class="datepicker" 
                     placeholder={this.state.serviceDate!==null?(this.state.serviceDate.toString().split('T')[0]):("")} 
                     id="serviceDate" 
-                    onChange={this.handleChange} 
                     style={{width: 100+"px",height:25+"px"}}
                 />
                 <br/><b>Availability: </b>{this.props.vehicle.availability===true?"Available":"Unavailable"}

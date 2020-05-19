@@ -91,37 +91,6 @@ class VehicleList extends Component {
         })
     }
 
-    handleUpdate = (e) => {
-        e.preventDefault();
-        console.log(this.props.vehicle);
-        const config = {
-            headers:{
-                Authorization:'Bearer '+ localStorage.token
-            }
-        }
-        
-        const data = {
-            rates:this.state.rates,
-            description:this.state.description,
-            quantity:this.state.quantity,
-            mileage:this.state.mileage,
-            serviceDate:this.state.serviceDate,
-            imgUrl:this.state.imgUrl
-        }
-        console.log(data);
-
-        axios.put("http://localhost:8080/UpdateVehicle/"+ this.state.activeItemId,data,config)
-            .then(function(res){
-                console.log("Profile updated successfully!");
-                alert("Profile updated successfully!");
-                // window.location.reload();
-            }).catch(function(error){
-                console.log("Profile update un-successful!\nError : ",error.response);
-                alert("Profile update un-successful!");
-
-         })
-    }
-
     handleSubmit = (e) => {
         e.preventDefault();
         console.log(this.state);
