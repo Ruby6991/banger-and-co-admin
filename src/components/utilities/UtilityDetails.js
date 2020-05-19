@@ -8,11 +8,10 @@ class UtilityDetails extends Component {
         super(props);
         this.state={
             id:this.props.utility.id,
-            rates:this.props.utility.rates,
-            description:this.props.utility.description,
+            utilityRate:this.props.utility.utilityRate,
             quantity:this.props.utility.quantity,
-            imgUrl:this.props.utility.imgUrl,
-            title:this.props.title
+            utilityImg:this.props.utility.utilityImg,
+            utilityName:this.props.utility.utilityName
         }
         this.handleChange = this.handleChange.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
@@ -20,9 +19,6 @@ class UtilityDetails extends Component {
     }
 
     componentDidMount(){
-        const modal = document.querySelectorAll('.modal');
-        M.Modal.init(modal, {});
-
         const select = document.querySelectorAll('select');
         M.FormSelect.init(select, {});
     }
@@ -42,11 +38,10 @@ class UtilityDetails extends Component {
         }
         
         const data = {
-            rates:this.state.rates,
-            description:this.state.description,
+            utilityRate:this.state.utilityRate,
             quantity:this.state.quantity,
-            imgUrl:this.state.imgUrl,
-            title:this.props.title
+            utilityImg:this.state.utilityImg,
+            utilityName:this.state.utilityName
         }
         console.log(data);
 
@@ -86,27 +81,24 @@ class UtilityDetails extends Component {
         return (
             <tr>
                 <td class="center">
-                    <i><b>{this.props.vehicle.id}</b></i><br/><br/>
+                    <i><b>{this.props.utility.id}</b></i><br/><br/>
                     <button class="waves-effect waves-light btn-small red lighten-2" onClick={this.handleUpdate}>Update</button><br/><br/>
                     <button class="waves-effect waves-light btn-small red lighten-2" onClick={this.handleDelete}>Delete</button>
                 </td>
                 <td class="teal lighten-4 center">
-                    {this.props.utility.title}</td>
-                <td class="teal lighten-4 center">
-                    <textarea style={{width:200+"px",height:125+"px"}} type="text" placeholder={this.state.description} id="description" onChange={this.handleChange} />
+                    {this.props.utility.utilityName}</td>
+                <td class="center">
+                    {this.props.utility.utilityAvailability===true?"Available":"Unavailable"}
                 </td>
                 <td class="teal lighten-4 center">
-                    {this.props.utility.availability===true?"Available":"Unavailable"}
+                    <input class="center" type="text" placeholder={this.state.utilityRate} id="utilityRate" onChange={this.handleChange} style={{width: 50+"px",height:25+"px"}}/> Euros
+                </td>
+                <td class="center">
+                    <img class="responsive-img" src={this.state.utilityImg} alt=""/><br/>
+                    <input type="text" placeholder="New Image URL" id="utilityImg" onChange={this.handleChange} style={{height:25+"px"}}/>
                 </td>
                 <td class="teal lighten-4 center">
-                    <input type="text" placeholder={this.state.rates} id="rates" onChange={this.handleChange} style={{width: 50+"px",height:25+"px"}}/> Euros
-                </td>
-                <td>
-                    <img class="responsive-img" src={this.state.imgUrl} alt=""/><br/>
-                    <input type="text" placeholder="New Image URL" id="imgUrl" onChange={this.handleChange} style={{height:25+"px"}}/>
-                </td>
-                <td class="teal lighten-4">
-                    <input type="tel" placeholder={this.state.quantity} id="quantity" onChange={this.handleChange} style={{width: 50+"px",height:25+"px"}}/>
+                    <input class="center" type="tel" placeholder={this.state.quantity} id="quantity" onChange={this.handleChange} style={{width: 50+"px",height:25+"px"}}/>
                 </td>
 
             </tr>

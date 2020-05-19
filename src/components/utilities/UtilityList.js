@@ -10,12 +10,11 @@ class UtilityList extends Component {
         super(props);
         this.state={
             utilities:[],
-            title:'',
-            description:'',
-            imgUrl:'',
+            utilityName:'',
+            utilityImg:'',
             quantity:'',
-            rates:'',
-            availability:''
+            utilityRate:'',
+            utilityAvailability:''
         }
     }
 
@@ -64,12 +63,11 @@ class UtilityList extends Component {
         }
         
         const data = {
-            title:this.state.title,
-            description:this.state.description,
-            imgUrl:this.state.imgUrl,
+            utilityName:this.state.utilityName,
+            utilityImg:this.state.utilityImg,
             quantity:this.state.quantity,
-            rates:this.state.rates,
-            availability:true
+            utilityRate:this.state.utilityRate,
+            utilityAvailability:true
         }
         console.log(data);
 
@@ -115,11 +113,10 @@ class UtilityList extends Component {
                                     <div class="modal-content">
                                         <h4>Add New Utility</h4>
                                         <form >
-                                            <input type="text" placeholder="Title" id="title" onChange={this.handleChange}/>
-                                            <input type="text" placeholder="Rates" id="rates" onChange={this.handleChange}/>
-                                            <input type="text" placeholder="Description" id="description" onChange={this.handleChange}/>
+                                            <input type="text" placeholder="Title" id="utilityName" onChange={this.handleChange}/>
+                                            <input type="text" placeholder="Rates" id="utilityRate" onChange={this.handleChange}/>
                                             <input type="tel" placeholder="Quantity" id="quantity" onChange={this.handleChange}/>
-                                            <input type="text" placeholder="Image" id="imgUrl" onChange={this.handleChange} />
+                                            <input type="text" placeholder="Image" id="utilityImg" onChange={this.handleChange} />
                                         </form>
                                     </div>
                                     <div class="modal-footer">
@@ -133,10 +130,9 @@ class UtilityList extends Component {
                                         <tr>
                                             <th class="teal lighten-3">Utility ID</th>
                                             <th class=" teal lighten-4">Title</th>
-                                            <th class=" teal lighten-3">Description</th>
                                             <th class=" teal lighten-3">Availability</th>
                                             <th class="teal lighten-4"style={{width: 100+"px"}}>Rates</th>
-                                            <th class=" teal lighten-3" style={{width: 200+"px"}} >Image</th>
+                                            <th class=" teal lighten-3" style={{width: 300+"px"}} >Image</th>
                                             <th class="teal lighten-4" style={{width: 100+"px"}}>Quantity</th>
                                         </tr>
                                     </thead>

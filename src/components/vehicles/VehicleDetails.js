@@ -131,7 +131,7 @@ class VehicleDetails extends Component {
                 </td>
                 <td class="center">{this.props.vehicle.category}</td>
                 <td class="teal lighten-4 center">
-                    <input type="text" placeholder={this.state.rates} id="rates" onChange={this.handleChange} style={{width: 50+"px",height:25+"px"}}/> Euros
+                    <input class="center" type="text" placeholder={this.state.rates} id="rates" onChange={this.handleChange} style={{width: 50+"px",height:25+"px"}}/> Euros
                 </td>
                 <td>
                     <img class="responsive-img" src={this.state.imgUrl} alt=""/><br/>
