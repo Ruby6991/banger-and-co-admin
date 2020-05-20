@@ -30,7 +30,7 @@ class UserList extends Component {
                 users:res.data
             })
         }).catch(function(error){
-            console.log(error.response);
+            console.log(error);
         })
     }
     render() {
@@ -56,13 +56,13 @@ class UserList extends Component {
                                 <table class="responsive-table highlight">
                                     <thead>
                                     <tr>
-                                        <th class="teal lighten-3">User ID</th>
-                                        <th class=" teal lighten-4">Full Name</th>
-                                        <th class="teal lighten-3">Date of Birth</th>
-                                        <th class=" teal lighten-4">Address</th>
-                                        <th class="teal lighten-3">Phone Number</th>
-                                        <th class=" teal lighten-4">Customer State</th>
-                                        <th class="teal lighten-3">Documents</th>
+                                        <th class="teal lighten-4">User ID</th>
+                                        <th class=" teal lighten-3">Full Name</th>
+                                        <th class="teal lighten-4">Date of Birth</th>
+                                        <th class=" teal lighten-3">Address</th>
+                                        <th class="teal lighten-4">Phone Number</th>
+                                        <th class=" teal lighten-3">Customer State</th>
+                                        <th class="teal lighten-4">Documents</th>
                                     </tr>
                                     </thead>
 

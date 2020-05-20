@@ -3,14 +3,20 @@ import React, { Component } from 'react'
 import M from 'materialize-css'
 import Chart from 'chart.js'
 import NavBar from '../layout/Navbar'
+import BookingDetails from './BookingDetails'
 
 class Dashboard extends Component {
+    constructor(props){
+        super(props);
+        this.state={
+            bookings:[]
+        }
+    }
     componentDidMount(){
         const sidenav = document.querySelectorAll('.sidenav');
         M.Sidenav.init(sidenav,{});
 
         const chart = document.getElementById("myChart").getContext("2d");
-        const chart2 = document.getElementById("myChart2").getContext("2d");
         const myChart = new Chart(chart,{
             type:'bar',
             data:{
@@ -22,21 +28,6 @@ class Dashboard extends Component {
                     backgroundColor:'#CBE7E3',
                     borderColor:'#000',
                     borderWidth:1,
-                }]
-            },
-            options:{
-            }
-        });
-        const myChart2 = new Chart(chart2,{
-            type:'line',
-            data:{
-                labels:['monday','tuesday','wednesday','thursday','friday'],
-                datasets:[{
-                    label:'DataUsers Weekly',
-                    data:[50,57,60,52,55],
-                    backgroundColor:'#CBE7E3',
-                    borderColor:'#000',
-                    borderWidth:1
                 }]
             },
             options:{
@@ -102,7 +93,29 @@ class Dashboard extends Component {
                             <div class="col s12 l12 m6">
                                 <div class="card card-bg">
                                     <div class="card-content">
-                                        <canvas id="myChart2"></canvas>
+                                        <span class="card-title center">Bookings</span>
+                                        <table class="responsive-table highlight">
+                                            <thead>
+                                            <tr>
+                                                <th class="teal lighten-4">Booking ID</th>
+                                                <th class=" teal lighten-3">Booking Duration</th>
+                                                <th class="teal lighten-4">Late State</th>
+                                                <th class=" teal lighten-3">Extended State & Extended Time</th>
+                                                <th class="teal lighten-4">Booking State</th>
+                                                <th class=" teal lighten-3">Booking Info</th>
+                                                <th class="teal lighten-4">User</th>
+                                            </tr>
+                                            </thead>
+
+                                            <tbody>
+                                                { this.state.bookings && this.state.bookings.map(booking => 
+                                                {
+                                                        return(
+                                                            <BookingDetails booking={booking} key={booking.id} />
+                                                        )
+                                                })}
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                                 
