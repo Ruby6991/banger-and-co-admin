@@ -132,7 +132,8 @@ class UpdateVehicle extends Component {
                                         </tr>
                                         </tbody>
                                     </table>
-                                <button className="edit-btn" type="button" onClick={this.handleSubmit}>Update Booking</button>
+                                    <br/>
+                                <button class="waves-effect waves-light btn-small red lighten-2" type="button" onClick={this.handleSubmit}>Update Vehicle</button>
                             </form>
                         </div>   
                     </div>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import M from "materialize-css";
+import { Redirect } from "react-router-dom";
 const axios = require("axios");
 
 
@@ -11,7 +11,9 @@ class UtilityDetails extends Component {
             utilityRate:this.props.utility.utilityRate,
             quantity:this.props.utility.quantity,
             utilityImg:this.props.utility.utilityImg,
-            utilityName:this.props.utility.utilityName
+            utilityName:this.props.utility.utilityName,
+            isUpdate:false,
+            bookings:[]
         }
         this.handleChange = this.handleChange.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
@@ -19,8 +21,26 @@ class UtilityDetails extends Component {
     }
 
     componentDidMount(){
-        const select = document.querySelectorAll('select');
-        M.FormSelect.init(select, {});
+        const that = this;
+
+        const token = 'Bearer '+ localStorage.token;
+        const headersInfo = {
+            Authorization:token
+        }
+        const data = {
+            email:localStorage.email
+        }
+        console.log(headersInfo);
+        axios.post("http://localhost:8080/GetBookingList",data,{
+            headers:headersInfo
+        }).then(function(res){
+            console.log(res.data);
+            that.setState({
+                bookings:res.data
+            })
+        }).catch(function(error){
+            console.log(error);
+        })
     }
 
     handleChange = (e) => {
@@ -29,32 +49,12 @@ class UtilityDetails extends Component {
         })
     }
 
-    handleUpdate = () => {
-        console.log(this.state);
-        const config = {
-            headers:{
-                Authorization:'Bearer '+ localStorage.token
-            }
-        }
-        
-        const data = {
-            utilityRate:this.state.utilityRate,
-            quantity:this.state.quantity,
-            utilityImg:this.state.utilityImg,
-            utilityName:this.state.utilityName
-        }
-        console.log(data);
-
-        axios.put("http://localhost:8080/UpdateUtility/"+ this.state.id,data,config)
-            .then(function(res){
-                console.log("Utility updated successfully!");
-                alert("Utility updated successfully!");
-                window.location.reload();
-            }).catch(function(error){
-                console.log("Utility update un-successful!\nError : ",error.response);
-                alert("Utility update un-successful!");
-         })
+    handleUpdate(){
+        this.setState({
+            isUpdate:true
+        })
     }
+
 
     handleDelete() {
         const config = {
@@ -62,24 +62,49 @@ class UtilityDetails extends Component {
                 Authorization:'Bearer '+ localStorage.token
             }
         }
-        if (window.confirm("Are you sure you want to delete this vehicle?")) {
-            axios.delete("http://localhost:8080/DeleteUtility/"+ this.state.id,config)
-            .then(function(res){
-                console.log("Utility deleted successfully!");
-                alert("Utility deleted successfully!");
-                window.location.reload();
-            }).catch(function(error){
-                console.log("Utility delete un-successful!\nError : ",error.response);
-                alert("Utility delete un-successful!");
-        })
-          } else {
-            alert("Utility deletion cancelled");
-          }             
+
+        let canDelete = true;
+        for(let a=0; a<this.state.bookings.length; a++){
+            if(this.state.bookings[a].utilities!=null && (this.state.bookings[a].bookingState==='PickedUp' || this.state.bookings[a].bookingState==='Pending')){
+                for(let b=0; b<this.state.bookings[a].utilities.length; b++){
+                    if(this.state.bookings[a].utilities[b].id === this.state.id){
+                        canDelete=false;
+                    }
+                }
+            }
+        }
+
+        if(canDelete){
+            if (window.confirm("Are you sure you want to delete this vehicle?")) {
+                axios.delete("http://localhost:8080/DeleteUtility/"+ this.state.id,config)
+                .then(function(res){
+                    console.log("Utility deleted successfully!");
+                    alert("Utility deleted successfully!");
+                    window.location.reload();
+                }).catch(function(error){
+                    console.log("Utility delete un-successful!\nError : ",error.response);
+                    alert("Utility delete un-successful!");
+            })
+              } else {
+                alert("Utility deletion cancelled");
+              }   
+        }else{
+            alert("This Utility Cannot be Deleted due to existing bookings that include this utility");
+        }
+                  
     }
 
     render() {
         return (
             <tr>
+                {
+                   this.state.isUpdate?(
+                       <Redirect to={{
+                            state: {id:this.state.id},
+                            pathname: '/updateUtility'
+                          }}/>
+                   ):("")
+                }
                 <td class="center">
                     <i><b>{this.props.utility.id}</b></i><br/><br/>
                     <button class="waves-effect waves-light btn-small red lighten-2" onClick={this.handleUpdate}>Update</button><br/><br/>
@@ -91,14 +116,13 @@ class UtilityDetails extends Component {
                     {this.props.utility.utilityAvailability===true?"Available":"Unavailable"}
                 </td>
                 <td class="teal lighten-4 center">
-                    <input class="center" type="text" placeholder={this.state.utilityRate} id="utilityRate" onChange={this.handleChange} style={{width: 50+"px",height:25+"px"}}/> Euros
+                    {this.state.utilityRate} Euros
                 </td>
                 <td class="center">
                     <img class="responsive-img" src={this.state.utilityImg} alt=""/><br/>
-                    <input type="text" placeholder="New Image URL" id="utilityImg" onChange={this.handleChange} style={{height:25+"px"}}/>
                 </td>
                 <td class="teal lighten-4 center">
-                    <input class="center" type="tel" placeholder={this.state.quantity} id="quantity" onChange={this.handleChange} style={{width: 50+"px",height:25+"px"}}/>
+                    {this.state.quantity}
                 </td>
 
             </tr>

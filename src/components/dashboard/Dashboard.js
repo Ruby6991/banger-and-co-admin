@@ -4,6 +4,7 @@ import M from 'materialize-css'
 import Chart from 'chart.js'
 import NavBar from '../layout/Navbar'
 import BookingDetails from './BookingDetails'
+const axios = require("axios")
 
 class Dashboard extends Component {
     constructor(props){
@@ -33,6 +34,27 @@ class Dashboard extends Component {
             options:{
             }
         });
+
+        const that = this;
+        const config = {
+            headers:{
+                Authorization:'Bearer '+ localStorage.token
+            }
+        }
+
+        const data = {
+            email:localStorage.email
+        }
+
+        axios.post("http://localhost:8080/GetBookingList",data,config)
+        .then(function(res){
+            console.log(res.data);
+            that.setState({
+                bookings:res.data
+            })
+        }).catch(function(error){
+            console.log(error.response);
+        })
     }
     render() {
         return (
@@ -98,12 +120,14 @@ class Dashboard extends Component {
                                             <thead>
                                             <tr>
                                                 <th class="teal lighten-4">Booking ID</th>
-                                                <th class=" teal lighten-3">Booking Duration</th>
+                                                <th class=" teal lighten-3"style={{width: 150+"px"}}>Booking Duration</th>
                                                 <th class="teal lighten-4">Late State</th>
                                                 <th class=" teal lighten-3">Extended State & Extended Time</th>
                                                 <th class="teal lighten-4">Booking State</th>
-                                                <th class=" teal lighten-3">Booking Info</th>
-                                                <th class="teal lighten-4">User</th>
+                                                <th class="teal lighten-3">User</th>
+                                                <th class="teal lighten-4" style={{width: 100+"px"}}>Vehicle</th>
+                                                <th class="teal lighten-3">Utilities</th>
+                                                <th class=" teal lighten-4">More</th>
                                             </tr>
                                             </thead>
 

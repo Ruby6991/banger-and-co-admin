@@ -14,29 +14,7 @@ class UserDetails extends Component{
             phoneNo:this.props.user.phoneNo,
             customerState:this.props.user.customerState
         }
-        // this.blacklistUser = this.blacklistUser.bind(this);
     }
-
-    // blacklistUser() {
-    //     const config = {
-    //         headers:{
-    //             Authorization:'Bearer '+ localStorage.token
-    //         }
-    //     }
-    //     if (window.confirm("Are you sure you want to blacklist this user?")) {
-    //         axios.post("http://localhost:8080/BlacklistUser/"+ this.state.email,config)
-    //         .then(function(res){
-    //             console.log("User blacklisted successfully!");
-    //             alert("User blacklisted successfully!");
-    //             window.location.reload();
-    //         }).catch(function(error){
-    //             console.log("User blacklisting un-successful!\nError : ",error.response);
-    //             alert("User blacklisting  un-successful!");
-    //     })
-    //       } else {
-    //         alert("User blacklisting  cancelled");
-    //       }             
-    // }
 
     render(){
         return (
@@ -47,7 +25,6 @@ class UserDetails extends Component{
                 <td>{this.state.address}</td>
                 <td class="teal lighten-4">{this.state.phoneNo}</td>
                 <td class="center">{this.state.customerState} <br/> 
-                {/* <button class="waves-effect waves-light btn-small teal lighten-3" onClick={this.blacklistUser}>Blacklist</button> */}
                 </td>
                 <td class="teal lighten-4"><button class="waves-effect btn-flat grey darken-2 white-text">Docs</button></td>
             </tr>

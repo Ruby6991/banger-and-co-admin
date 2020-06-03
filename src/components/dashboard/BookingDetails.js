@@ -1,6 +1,6 @@
 import React from 'react'
 import { Component } from 'react'
-const axios = require("axios")
+import { Redirect } from "react-router-dom";
 
 class BookingDetails extends Component{
     constructor(props){
@@ -14,52 +14,64 @@ class BookingDetails extends Component{
             extendedTime:this.props.booking.extendedTime,
             bookingState:this.props.booking.bookingState,
             bookedTime:this.props.booking.bookedTime,
-            payment:this.props.booking.payment,
-            booking_utility:this.props.booking.booking_utility,
-            vehicle_id:this.props.booking.vehicle_id,
-            user_id:this.props.booking.user_id
+            booking_utilities:this.props.booking.utilities,
+            vehicle_id:this.props.booking.vehicle.id,
+            vehicle_model:this.props.booking.vehicle.model,
+            user_id:this.props.booking.user.firstName + ' ' + this.props.booking.user.lastName,
+            isUpdate:false
         }
-        this.blacklistUser = this.blacklistUser.bind(this);
+        this.handleUpdate = this.handleUpdate.bind(this);
     }
 
-    blacklistUser() {
-        const config = {
-            headers:{
-                Authorization:'Bearer '+ localStorage.token
-            }
-        }
-        if (window.confirm("Are you sure you want to blacklist this user?")) {
-            axios.post("http://localhost:8080/BlacklistUser/"+ this.state.user_id,config)
-            .then(function(res){
-                console.log("User blacklisted successfully!");
-                alert("User blacklisted successfully!");
-                window.location.reload();
-            }).catch(function(error){
-                console.log("User blacklisting un-successful!\nError : ",error.response);
-                alert("User blacklisting  un-successful!");
+    handleUpdate(){
+        this.setState({
+            isUpdate:true
         })
-          } else {
-            alert("User blacklisting  cancelled");
-          }             
     }
 
     render(){
         return (
             <tr>
+                {
+                   this.state.isUpdate?(
+                       <Redirect to={{
+                            state: {booking:this.props.booking},
+                            pathname: '/updateBooking'
+                          }}/>
+                   ):("")
+                }
                 <td class="teal lighten-4"><i><b>{this.state.id}</b></i></td>
-                <td>{this.state.pickupDateTime.split('T')[0]+'-'+this.state.dropDateTime.split('T')[0]}</td>
-                <td class="teal lighten-4">{this.state.lateState}</td>
-                <td>{this.state.extendedState }<br/>{'Extended Time: '+ this.state.extendedTime}</td>
-                <td class="teal lighten-4">{this.state.bookingState}</td>
-                <td class="center">
-                    Booked Time:{this.state.bookedTime}<br/> 
-                    Payment:{this.state.payment}<br/> 
-                    booking_utility:{this.state.booking_utility}<br/> 
-                    vehicle_id:{this.state.vehicle_id}<br/> 
-                {/* <button class="waves-effect waves-light btn-small teal lighten-3" onClick={this.blacklistUser}>Blacklist</button> */}
+                <td>{this.state.pickupDateTime.split('T')[0]+' to'}<br/>{this.state.dropDateTime.split('T')[0]}</td>
+                <td class="teal lighten-4">{this.state.lateState?("Late"):("Not Late")}</td>
+                <td>
+                    {this.state.extendedState?('Extended Time: '+ this.state.extendedTime.split('T')[0] + ' at ' +this.state.extendedTime.split('T')[1].split('.')[0]
+                    ):("Not Extended")}
                 </td>
-                <td>{this.state.user_id}</td>
-                <td class="teal lighten-4"><button class="waves-effect btn-flat grey darken-2 white-text" onClick={this.blacklistUser}>Blacklist</button></td>
+                <td class="teal lighten-4 center">
+                    {this.state.bookingState}
+                </td>
+                <td class="center">
+                    {this.state.user_id}
+                </td>
+                <td className="teal lighten-4 center">
+                {this.state.vehicle_model}
+                </td>
+                <td class="center">
+                {
+                this.state.booking_utilities.length>0?(
+                    this.state.booking_utilities.map(utility => 
+                        {
+                            return(
+                                utility.utilityName + " | "
+                            )
+                        })
+                ):(
+                    "None Selected"
+                )}
+                </td>
+                <td className="teal lighten-4 center">
+                <button class="waves-effect waves-light btn-small red lighten-2" type="button" onClick={this.handleUpdate}>Update Booking</button>
+                </td>
             </tr>
         )
     }

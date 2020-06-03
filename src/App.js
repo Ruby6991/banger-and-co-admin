@@ -6,6 +6,8 @@ import UserList from './components/users/UserList'
 import VehicleList from './components/vehicles/VehicleList'
 import UtilityList from './components/utilities/UtilityList'
 import UpdateVehicle from './components/vehicles/UpdateVehicle';
+import UpdateBooking from './components/dashboard/UpdateBooking';
+import UpdateUtility from './components/utilities/UpdateUtility';
 
 class App extends Component {
   render(){
@@ -20,6 +22,8 @@ class App extends Component {
             <Route exact path='/vehicles' component={VehicleList}/>
             <Route exact path='/utilities' component={UtilityList}/>
             <Route exact path='/updateVehicle' component={UpdateVehicle}/>
+            <Route exact path='/updateBooking' component={UpdateBooking}/>
+            <Route exact path='/updateUtility' component={UpdateUtility}/>
           </Switch>
         </div>
       </BrowserRouter>
