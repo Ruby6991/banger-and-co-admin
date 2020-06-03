@@ -14,7 +14,6 @@ class VehicleList extends Component {
             rates:'',
             description:'',
             category:'',
-            quantity:'',
             fuelType:'',
             mileage:'',
             serviceDate:'',
@@ -104,7 +103,6 @@ class VehicleList extends Component {
             rates:this.state.rates,
             description:this.state.description,
             category:this.state.category,
-            quantity:this.state.quantity,
             fuelType:this.state.fuelType,
             mileage:this.state.mileage,
 
@@ -169,7 +167,7 @@ class VehicleList extends Component {
                                                 </select>
                                             </div>
 
-                                            <input type="tel" placeholder="Quantity" id="quantity" onChange={this.handleChange}/>
+                                            {/* <input type="tel" placeholder="Quantity" id="quantity" onChange={this.handleChange}/> */}
 
                                             <div class="input-field">
                                                 <select id="fuelType" onChange={this.handleChange}>

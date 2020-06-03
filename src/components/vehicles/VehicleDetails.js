@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import M from "materialize-css";
+import { Redirect } from "react-router-dom";
 const axios = require("axios");
 
 
@@ -10,13 +11,11 @@ class VehicleDetails extends Component {
             id:this.props.vehicle.id,
             rates:this.props.vehicle.rates,
             description:this.props.vehicle.description,
-            quantity:this.props.vehicle.quantity,
             mileage:this.props.vehicle.mileage,
             serviceDate:this.props.vehicle.serviceDate,
-            imgUrl:this.props.vehicle.imgUrl
+            imgUrl:this.props.vehicle.imgUrl,
+            updateVehicle:false
         }
-        // this.handleDate = this.handleDate.bind(this);
-        this.handleChange = this.handleChange.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
         this.handleUpdate = this.handleUpdate.bind(this);
     }
@@ -27,75 +26,10 @@ class VehicleDetails extends Component {
 
         const select = document.querySelectorAll('select');
         M.FormSelect.init(select, {});
-
-        // const that = this;
-        // const datepicker=document.querySelectorAll('.datepicker');
-        // M.Datepicker.init(datepicker,{
-        //     selectMonths: true, 
-        //     selectYears: 100, 
-        //     format: "yyyy-mm-dd",
-        //     setDefaultDate: true,
-        //     autoClose:true,
-        //     onSet:that.handleDate,
-        //     onSelect: function(date) {
-        //         var splitDate = date.toString().split("-"),
-        //             newdate = splitDate[0].split(" "),
-        //             editedDate = newdate[1]+"-"+newdate[2]+'-'+newdate[3],
-        //             finalDate = new Date(editedDate);
-        //         that.setState({
-        //             serviceDate : finalDate
-        //         })
-        //       }
-        // });
-
-    }
-
-    // handleDate = (date) => {
-    //     var splitDate = date.toString().split("-"),
-    //                 newdate = splitDate[0].split(" "),
-    //                 editedDate = newdate[1]+"-"+newdate[2]+'-'+newdate[3],
-    //                 finalDate = new Date(editedDate);
-    //     this.setState({
-    //         serviceDate: finalDate
-    //     })
-    // }
-
-    handleChange = (e) => {
-        this.setState({
-            [e.target.id]: e.target.value
-        })
-    }
-
-    handleUpdate = () => {
-        console.log(this.state);
-        const config = {
-            headers:{
-                Authorization:'Bearer '+ localStorage.token
-            }
-        }
-        
-        const data = {
-            rates:this.state.rates,
-            description:this.state.description,
-            quantity:this.state.quantity,
-            mileage:this.state.mileage,
-            serviceDate:this.state.serviceDate,
-            imgUrl:this.state.imgUrl
-        }
-        console.log(data);
-
-        axios.put("http://localhost:8080/UpdateVehicle/"+ this.state.id,data,config)
-            .then(function(res){
-                console.log("Vehicle updated successfully!");
-                alert("Vehicle updated successfully!");
-                window.location.reload();
-            }).catch(function(error){
-                console.log("Vehicle update un-successful!\nError : ",error.response);
-                alert("Vehicle update un-successful!");
-         })
     }
 
     handleDelete() {
+        //ADD VALIDATION
         const config = {
             headers:{
                 Authorization:'Bearer '+ localStorage.token
@@ -116,11 +50,25 @@ class VehicleDetails extends Component {
           }             
     }
 
+    handleUpdate() {
+        this.setState({
+            updateVehicle:true
+        })
+    }
+
     render() {
         return (
             <tr>
+                {
+                   this.state.updateVehicle?(
+                       <Redirect to={{
+                            state: {id:this.state.id},
+                            pathname: '/updateVehicle'
+                          }}/>
+                   ):("")
+                }
                 <td class="center">
-                    <i><b>{this.props.vehicle.id}</b></i><br/><br/>
+                    <i><b>{this.state.id}</b></i><br/><br/>
                     <button class="waves-effect waves-light btn-small red lighten-2" onClick={this.handleUpdate}>Update</button><br/><br/>
                     <button class="waves-effect waves-light btn-small red lighten-2" onClick={this.handleDelete}>Delete</button>
                 </td>
@@ -138,8 +86,7 @@ class VehicleDetails extends Component {
                     <input type="text" placeholder="New Image URL" id="imgUrl" onChange={this.handleChange} style={{height:25+"px"}}/>
                 </td>
                 
-                <td class="teal lighten-4"><b>Quantity: </b><input type="tel" placeholder={this.state.quantity} id="quantity" onChange={this.handleChange} style={{width: 50+"px",height:25+"px"}}/>
-                <br/><b>Fuel Type: </b>{this.props.vehicle.fuelType}
+                <td class="teal lighten-4"><b>Fuel Type: </b>{this.props.vehicle.fuelType}
                 <br/><b>Mileage: </b><input type="text" placeholder={this.state.mileage} id="mileage" onChange={this.handleChange} style={{width: 50+"px",height:25+"px"}}/>
                 <br/><b>Service Date: </b>
                 <input 

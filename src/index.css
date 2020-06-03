@@ -173,3 +173,6 @@ code {
   color: #e57373 ;
   opacity: 1; /* Firefox */
 }
+.update-vehicle .container{
+  padding-left: 120px;
+}
