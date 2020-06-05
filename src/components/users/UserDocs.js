@@ -20,6 +20,7 @@ class UserDocs extends Component {
             goBack:false
         }
         this.updateDocument = this.updateDocument.bind(this);
+        console.log(this.state);
     }
 
     componentDidMount(){
@@ -108,6 +109,24 @@ class UserDocs extends Component {
         }).catch(function(error){
             console.log(error);
         })
+
+        const validityData = {
+            email:this.state.user_id,
+            driversLicense:this.state.licenseNo
+        }
+        axios.post("http://localhost:8080/CheckUserFraud",validityData,{
+            headers:headersInfo
+        })
+        .then(function(res){
+                console.log(res.data);
+                const data = res.data;
+                if(data){
+                    alert("Fraudulent activity associated with the given license!");
+                }
+                
+            }).catch(function(error){
+                console.log(error.response);
+            }) 
     }
     
 
