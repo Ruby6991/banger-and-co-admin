@@ -22,13 +22,10 @@ class UpdateBooking extends Component {
             vehicle_img:this.props.location.state.booking.vehicle.imgUrl,
             user_id:this.props.location.state.booking.user.email,
             user_name:this.props.location.state.booking.user.firstName + ' ' + this.props.location.state.booking.user.lastName,
-            license:this.props.location.state.booking.user.driversLicense,
-            isUpdated:false,
-            viewDocs:false
+            isUpdated:false
         }
         this.blacklistUser = this.blacklistUser.bind(this);
         this.updateBookingState = this.updateBookingState.bind(this);
-        this.viewDocs = this.viewDocs.bind(this);
         console.log(props);
     }
 
@@ -94,27 +91,9 @@ class UpdateBooking extends Component {
           }             
     }
 
-    viewDocs(){
-        this.setState({
-            viewDocs:true
-        })
-    }
-
     render() {
         return (
             <div class="update-vehicle">
-                {
-                   this.state.viewDocs?(
-                    <Redirect to={{
-                            state: {
-                                id:this.state.user_id,
-                                firstName:this.state.user_name.split(' ')[0],
-                                lastName:this.state.user_name.split(' ')[1],
-                                license:this.state.license},
-                            pathname: '/userDocs'
-                          }}/>
-                   ):("")
-                }
                 <Navbar/>
                 {
                    this.state.isUpdated?(
@@ -185,10 +164,6 @@ class UpdateBooking extends Component {
                                     <tr>
                                         <td>User : </td>
                                         <td>{this.state.user_name}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>View and Update User Documents : </td>
-                                        <td><button id="edit-btn" onClick={this.viewDocs}>Documents</button></td>
                                     </tr>
                                     <tr>
                                         <td>Blacklist User : </td>
