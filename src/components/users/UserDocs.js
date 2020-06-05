@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Navbar from '../layout/Navbar'
 import { Redirect } from "react-router-dom";
 import M from "materialize-css";
-import { Base64 } from 'js-base64';
 const axios = require("axios");
 
 
@@ -21,8 +20,6 @@ class UserDocs extends Component {
             goBack:false
         }
         this.updateDocument = this.updateDocument.bind(this);
-        // this.base64ToArrayBuffer = this.base64ToArrayBuffer.bind(this);
-        // this.saveByteArray = this.saveByteArray.bind(this);
     }
 
     componentDidMount(){
@@ -111,15 +108,6 @@ class UserDocs extends Component {
         }).catch(function(error){
             console.log(error);
         })
-
-        // var bytes = new Uint8Array(res.data); // pass your byte response to this constructor
-
-        // var blob=new Blob([bytes], {type: "image/jpeg"});// change resultByte to bytes
-
-        // var link=document.createElement('a');
-        // link.href=window.URL.createObjectURL(blob);
-        // link.download="myFileName.jpg";
-        // link.click();
     }
     
 
@@ -132,19 +120,6 @@ class UserDocs extends Component {
         });
         
     }
-
-    // downloadFile() {
-    //     const byteCharacters = Base64.decode(this.state.document);
-    //     const byteNumbers = new Array(byteCharacters.length);
-    //     for (let i = 0; i < byteCharacters.length; i++) {
-    //         byteNumbers[i] = byteCharacters.charCodeAt(i);
-    //     }
-    //     const byteArray = new Uint8Array(byteNumbers);
-    //     const blob = new Blob([byteArray], {type: 'image/jpeg'});
-
-    //     var url = URL.createObjectURL(blob);
-    //     window.open(url);
-    //   }
 
     updateDocument(){
         const token = 'Bearer '+ localStorage.token;

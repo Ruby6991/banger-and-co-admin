@@ -48,6 +48,9 @@ class Navbar extends Component {
                     <li>
                         <NavLink class="white-text" to='/utilities'><i class="material-icons left white-text">widgets</i>Utilities</NavLink>
                     </li>
+                    <li>
+                        <NavLink class="white-text" to='/competitorInfo'><i class="material-icons left white-text">compare_arrows</i>Price Comparison</NavLink>
+                    </li>
                     <li><a href="/" onClick={this.signOut} class="white-text">Logout</a></li>
                 </ul>
             </div>
