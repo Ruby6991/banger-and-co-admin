@@ -106,13 +106,17 @@ class CompetitorInfo extends Component {
                                     </thead>
 
                                     <tbody>
-                                    { this.state.competitorVehicles && this.state.competitorVehicles.map(vehicle => 
+                                    { 
+                                        this.state.competitorVehicles && this.state.competitorVehicles.map(vehicle => 
                                         {
                                             return(
                                                 <tr>
                                                     <td class="center">
                                                         <i><b>{vehicle.vehicleModel}</b></i><br/><br/>
-                                                        <img class="responsive-img" src={vehicle.vehicleImage} alt=""/><br/>
+                                                        <img class="responsive-img" 
+                                                        src={vehicle.vehicleImage} 
+                                                        alt=""/>
+                                                        <br/>
                                                     </td>
                                                     <td class="teal lighten-4 center">
                                                         {vehicle.category}
