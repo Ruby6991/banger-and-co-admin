@@ -14,12 +14,18 @@ class UserDocs extends Component {
             user_docs:[],
             licenseNo:this.props.location.state.license,
             license:'',
+            licenseDown:'',
+            licenseName:'',
             otherDocName:'',
             otherDoc:'',
+            otherDown:'',
             selectedFile:'',
-            goBack:false
+            goBack:false,
+            download:false
         }
         this.updateDocument = this.updateDocument.bind(this);
+        this.downloadLicenseDocument = this.downloadLicenseDocument.bind(this);
+        this.downloadOtherDocument = this.downloadOtherDocument.bind(this);
         console.log(this.state);
     }
 
@@ -33,37 +39,6 @@ class UserDocs extends Component {
         const headersInfo = {
             Authorization:token
         }
-        const docType1 = {
-            docType:'Drivers License'
-        }
-
-        axios.post("http://localhost:8080/doc/getDocumentByType/"+this.state.user_id, docType1,{
-            headers:headersInfo
-        })
-        .then(function(res){
-            console.log(res);
-            that.setState({
-                license:res.data
-            })
-        }).catch(function(error){
-            console.log(error.response);
-        })
-
-        const docType2 = {
-            docType:'Other'
-        }
-
-        axios.post("http://localhost:8080/doc/getDocumentByType/"+this.state.user_id, docType2,{
-            headers:headersInfo
-        })
-        .then(function(res){
-            console.log(res);
-            that.setState({
-                otherDoc:res.data
-            })
-        }).catch(function(error){
-            console.log(error.response);
-        })
 
         const user = {
             email:this.state.user_id
@@ -78,27 +53,17 @@ class UserDocs extends Component {
             for(let a=0; a<data.length; a++){
                 if(data[a].docType ==="Other"){
                     that.setState({
-                        otherDocName:data[a].docName
+                        otherDocName:data[a].docName,
+                        otherDoc:" data:image/jpeg;charset=utf-8;base64,"+data[a].file,
+                        otherDown:window.atob(data[a].file)
                     })
                     
                 }else{
-                    var binaryString =  window.atob(data[a].file);
-                    var binaryLen = binaryString.length;
-                    var bytes = new Uint8Array(binaryLen);
-                    for (var i = 0; i < binaryLen; i++)        {
-                        var ascii = binaryString.charCodeAt(i);
-                        bytes[i] = ascii;
-                    }
-                    
-                    var atag = document.createElement("a");
-                    document.body.appendChild(atag);
-                    atag.style = "display: none";
-                    var blob = new Blob([bytes], {type: "octet/stream"}),
-                        url = window.URL.createObjectURL(blob);
-                    atag.href = url;
-                    atag.download = 'license.jpeg';
-                    atag.click();
-                    window.URL.revokeObjectURL(url);
+                    that.setState({
+                        licenseName:data[a].docName,
+                        license:" data:image/jpeg;charset=utf-8;base64,"+data[a].file,
+                        licenseDown:window.atob(data[a].file)
+                    })
                     
                 }
 
@@ -106,6 +71,7 @@ class UserDocs extends Component {
             that.setState({
                 user_docs:res.data
             })
+            console.log(that.state);
         }).catch(function(error){
             console.log(error);
         })
@@ -161,6 +127,58 @@ class UserDocs extends Component {
         })
     }
 
+    downloadLicenseDocument = (e) => {
+        e.preventDefault();
+        this.setState({
+            download:true
+        }, () => {
+            var binaryString =  this.state.licenseDown;
+            console.log(binaryString);
+            var binaryLen = binaryString.length;
+            var bytes = new Uint8Array(binaryLen);
+            for (var i = 0; i < binaryLen; i++)        {
+                var ascii = binaryString.charCodeAt(i);
+                bytes[i] = ascii;
+            }
+            
+            var atag = document.createElement("a");
+            document.body.appendChild(atag);
+            atag.style = "display: none";
+            var blob = new Blob([bytes], {type: "image/jpeg"});
+            var url = window.URL.createObjectURL(blob);
+            atag.href = url;
+            atag.download = this.state.licenseName.split(".")[0]+".jpeg";
+            atag.click();
+            window.URL.revokeObjectURL(url);
+            })
+    }
+
+    downloadOtherDocument = (e) => {
+        e.preventDefault();
+        this.setState({
+            download:true
+        }, () => {
+            var binaryString =  this.state.otherDown;
+            console.log(binaryString);
+            var binaryLen = binaryString.length;
+            var bytes = new Uint8Array(binaryLen);
+            for (var i = 0; i < binaryLen; i++)        {
+                var ascii = binaryString.charCodeAt(i);
+                bytes[i] = ascii;
+            }
+            
+            var atag = document.createElement("a");
+            document.body.appendChild(atag);
+            atag.style = "display: none";
+            var blob = new Blob([bytes], {type: "image/jpeg"});
+            var url = window.URL.createObjectURL(blob);
+            atag.href = url;
+            atag.download = this.state.otherDocName.split(".")[0]+".jpeg";
+            atag.click();
+            window.URL.revokeObjectURL(url);
+            })
+    }
+
     handleSubmit = (e) => {
         e.preventDefault();
         this.setState({
@@ -192,7 +210,9 @@ class UserDocs extends Component {
                                             <td>{this.state.licenseNo}</td>
                                         </tr>
                                         <tr>
-                                            <th>License</th>
+                                            <th>License
+                                            <button class="waves-effect waves-light btn-small red lighten-2" onClick={this.downloadLicenseDocument}>Download</button>
+                                            </th>
                                             <td><img style={{width:700+"px"}} class="responsive-img" src={this.state.license} alt=""/></td>
                                         </tr>
                                         <tr>
@@ -232,7 +252,9 @@ class UserDocs extends Component {
                                             </td>
                                         </tr>
                                         <tr>
-                                            <th>Other Doc</th>
+                                            <th>Other Doc
+                                            <button class="waves-effect waves-light btn-small red lighten-2" onClick={this.downloadOtherDocument}>Download</button>
+                                            </th>
                                             <td>{this.state.otherDoc?(
                                                 <img style={{width:700+"px"}} class="responsive-img" src={this.state.otherDoc} alt=""/>
                                                 ):("Not Available")
@@ -242,7 +264,7 @@ class UserDocs extends Component {
                                         </tbody>
                                     </table>
                                     <br/>
-                                <button class="waves-effect waves-light btn-small red lighten-2" type="button" onClick={this.handleSubmit}>Done</button>
+                                <button class="waves-effect waves-green btn-flat teal lighten-3" type="button" onClick={this.handleSubmit}>Done</button>
                         </div>   
                     </div>
                 </div>
