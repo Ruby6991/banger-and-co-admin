@@ -18,6 +18,7 @@ class UtilityDetails extends Component {
         this.handleChange = this.handleChange.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
         this.handleUpdate = this.handleUpdate.bind(this);
+        console.log(props);
     }
 
     componentDidMount(){
@@ -106,14 +107,14 @@ class UtilityDetails extends Component {
                    ):("")
                 }
                 <td class="center">
-                    <i><b>{this.props.utility.id}</b></i><br/><br/>
+                    <i><b>{this.state.id}</b></i><br/><br/>
                     <button class="waves-effect waves-light btn-small red lighten-2" onClick={this.handleUpdate}>Update</button><br/><br/>
                     <button class="waves-effect waves-light btn-small red lighten-2" onClick={this.handleDelete}>Delete</button>
                 </td>
                 <td class="teal lighten-4 center">
-                    {this.props.utility.utilityName}</td>
+                    {this.state.utilityName}</td>
                 <td class="center">
-                    {this.props.utility.utilityAvailability===true?"Available":"Unavailable"}
+                    {this.state.utilityAvailability===true?"Available":"Unavailable"}
                 </td>
                 <td class="teal lighten-4 center">
                     {this.state.utilityRate} Euros

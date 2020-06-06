@@ -8,8 +8,12 @@ class UserList extends Component {
     constructor(props){
         super(props);
         this.state={
-            users:[]
+            users:[],
+            searchResult:'',
+            view:true
         }
+        this.handleSearch = this.handleSearch.bind(this);
+        this.handleClose = this.handleClose.bind(this);
     }
     componentDidMount(){
         const that = this;
@@ -33,6 +37,35 @@ class UserList extends Component {
             console.log(error);
         })
     }
+
+    handleSearch = (e) => {
+        const that=this;
+        const token = 'Bearer '+ localStorage.token;
+        const headersInfo = {
+            Authorization:token
+        }
+        const userData = {
+            email:e.target.value
+        }
+        axios.post("http://localhost:8080/GetUser/",userData,{
+            headers:headersInfo
+        }).then(function(res){
+            console.log(res.data);
+            that.setState({
+                searchResult:res.data,
+                view:false
+            })
+        }).catch(function(error){
+            console.log(error);
+        })
+    }
+
+    handleClose = (e) => {
+        this.setState({
+            view:true,
+            searchResult:''
+        })
+    }
     
     render() {
         return (
@@ -42,9 +75,9 @@ class UserList extends Component {
                     <div class="nav-wrapper">
                         <form>
                             <div class="input-field teal lighten-3">
-                            <input id="search" type="search" required/>
+                            <input id="search" type="search" onChange={this.handleSearch} required/>
                             <label class="label-icon" for="search"><i class="material-icons">search</i></label>
-                            <i class="material-icons">close</i>
+                            <i class="material-icons" onClick={this.handleClose}>close</i>
                             </div>
                         </form>
                     </div>
@@ -68,7 +101,8 @@ class UserList extends Component {
                                     </thead>
 
                                     <tbody>
-                                        { this.state.users && this.state.users.map(user => 
+                                        {this.state.view?(
+                                            this.state.users && this.state.users.map(user => 
                                         {
                                             if(user.userType!=='Admin')
                                             {
@@ -76,7 +110,10 @@ class UserList extends Component {
                                                     <UserDetails user={user} key={user.id} />
                                                 )
                                             }
-                                        })}
+                                        })
+                                        ):(
+                                            <UserDetails user={this.state.searchResult} key={this.state.searchResult.email} /> 
+                                        )}
                                     </tbody>
                                 </table>
                             </div>

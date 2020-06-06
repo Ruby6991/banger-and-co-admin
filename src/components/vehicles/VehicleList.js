@@ -19,8 +19,13 @@ class VehicleList extends Component {
             serviceDate:'',
             availability:'',
             licenseNo:'',
-            imgUrl:''
+            imgUrl:'',
+            search:'',
+            searchResult:'',
+            view:true
         }
+        this.handleSearch = this.handleSearch.bind(this);
+        this.handleClose = this.handleClose.bind(this);
     }
 
     componentDidMount(){
@@ -70,8 +75,6 @@ class VehicleList extends Component {
         }).catch(function(error){
             console.log(error.response);
         })
-
-
     }
 
     handleDate = (date) => {
@@ -125,6 +128,26 @@ class VehicleList extends Component {
          })
     }
 
+    handleSearch = (e) => {
+        const that=this;
+        axios.get("http://localhost:8080/GetVehicle/"+ e.target.value).then(function(res){
+            console.log(res.data);
+            that.setState({
+                searchResult:res.data,
+                view:false
+            })
+        }).catch(function(error){
+            console.log(error);
+        })
+    }
+
+    handleClose = (e) => {
+        this.setState({
+            view:true,
+            searchResult:''
+        })
+    }
+
     render() {
         return (
             <div class="vehicles">
@@ -133,9 +156,9 @@ class VehicleList extends Component {
                     <div class="nav-wrapper">
                         <form>
                             <div class="input-field teal lighten-3">
-                            <input id="search" type="search" required/>
-                            <label class="label-icon" for="search"><i class="material-icons">search</i></label>
-                            <i class="material-icons">close</i>
+                            <input id="search" type="search" required onChange={this.handleSearch}/>
+                            <label class="label-icon" for="search" ><i class="material-icons">search</i></label>
+                            <i class="material-icons" onClick={this.handleClose}>close</i>
                             </div>
                         </form>
                     </div>
@@ -202,12 +225,16 @@ class VehicleList extends Component {
                                     </thead>
 
                                     <tbody>
-                                        { this.state.vehicles && this.state.vehicles.map(vehicle => 
+                                        {this.state.view?(
+                                            this.state.vehicles && this.state.vehicles.map(vehicle => 
                                         {
                                             return(
                                                 <VehicleDetails vehicle={vehicle} key={vehicle.id} />
                                             )
-                                        })}
+                                        })
+                                        ):(
+                                            <VehicleDetails vehicle={this.state.searchResult} key={this.state.searchResult.id} /> 
+                                        )}
                                     </tbody>
                                 </table>
                             </div>

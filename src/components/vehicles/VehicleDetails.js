@@ -17,6 +17,7 @@ class VehicleDetails extends Component {
             updateVehicle:false,
             bookings:[]
         }
+        console.log(props);
         this.handleDelete = this.handleDelete.bind(this);
         this.handleUpdate = this.handleUpdate.bind(this);
     }

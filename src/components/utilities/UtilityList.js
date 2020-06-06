@@ -14,8 +14,12 @@ class UtilityList extends Component {
             utilityImg:'',
             quantity:'',
             utilityRate:'',
-            utilityAvailability:''
+            utilityAvailability:'',
+            view:true,
+            searchResult:''
         }
+        this.handleSearch = this.handleSearch.bind(this);
+        this.handleClose = this.handleClose.bind(this);
     }
 
     componentDidMount(){
@@ -84,6 +88,32 @@ class UtilityList extends Component {
          })
     }
 
+    handleSearch = (e) => {
+        const that=this;
+        const token = 'Bearer '+ localStorage.token;
+        const headersInfo = {
+            Authorization:token
+        }
+        axios.get("http://localhost:8080/GetUtility/"+ e.target.value,{
+            headers:headersInfo
+        }).then(function(res){
+            console.log(res.data);
+            that.setState({
+                searchResult:res.data,
+                view:false
+            })
+        }).catch(function(error){
+            console.log(error);
+        })
+    }
+
+    handleClose = (e) => {
+        this.setState({
+            view:true,
+            searchResult:''
+        })
+    }
+
     render() {
         return (
             <div class="vehicles">
@@ -92,9 +122,9 @@ class UtilityList extends Component {
                     <div class="nav-wrapper">
                         <form>
                             <div class="input-field teal lighten-3">
-                            <input id="search" type="search" required/>
+                            <input id="search" type="search" onChange={this.handleSearch} required/>
                             <label class="label-icon" for="search"><i class="material-icons">search</i></label>
-                            <i class="material-icons">close</i>
+                            <i class="material-icons" onClick={this.handleClose}>close</i>
                             </div>
                         </form>
                     </div>
@@ -138,12 +168,16 @@ class UtilityList extends Component {
                                     </thead>
 
                                     <tbody>
-                                        { this.state.utilities && this.state.utilities.map(utility => 
+                                        {this.state.view?(
+                                            this.state.utilities && this.state.utilities.map(utility => 
                                         {
                                             return(
                                                 <UtilityDetails utility={utility} key={utility.id} />
                                             )
-                                        })}
+                                        })
+                                        ):(
+                                            <UtilityDetails utility={this.state.searchResult} key={this.state.searchResult.id} /> 
+                                        )}
                                     </tbody>
                                 </table>
                             </div>
