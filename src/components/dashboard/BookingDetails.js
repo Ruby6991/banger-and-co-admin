@@ -40,7 +40,9 @@ class BookingDetails extends Component{
                           }}/>
                    ):("")
                 }
-                <td class="teal lighten-4"><i><b>{this.state.id}</b></i></td>
+                <td class="teal lighten-4 center"><i><b>{this.state.id}</b></i><br/><br/>
+                <button class="waves-effect waves-light btn-small red lighten-2" type="button" onClick={this.handleUpdate}>Update Booking</button>
+                </td>
                 <td>{this.state.pickupDateTime.split('T')[0]+' to'}<br/>{this.state.dropDateTime.split('T')[0]}</td>
                 <td class="teal lighten-4">{this.state.lateState?("Late"):("Not Late")}</td>
                 <td>
@@ -69,9 +71,7 @@ class BookingDetails extends Component{
                     "None Selected"
                 )}
                 </td>
-                <td className="teal lighten-4 center">
-                <button class="waves-effect waves-light btn-small red lighten-2" type="button" onClick={this.handleUpdate}>Update Booking</button>
-                </td>
+                
             </tr>
         )
     }

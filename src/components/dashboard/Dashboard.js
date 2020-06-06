@@ -169,7 +169,7 @@ class Dashboard extends Component {
                                                 <th class="teal lighten-3">User</th>
                                                 <th class="teal lighten-4" style={{width: 100+"px"}}>Vehicle</th>
                                                 <th class="teal lighten-3">Utilities</th>
-                                                <th class=" teal lighten-4">More</th>
+                                                {/* <th class=" teal lighten-4">More</th> */}
                                             </tr>
                                             </thead>
 

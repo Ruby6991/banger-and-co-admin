@@ -12,6 +12,7 @@ class UtilityDetails extends Component {
             quantity:this.props.utility.quantity,
             utilityImg:this.props.utility.utilityImg,
             utilityName:this.props.utility.utilityName,
+            utilityAvailability:this.props.utility.utilityAvailability,
             isUpdate:false,
             bookings:[]
         }

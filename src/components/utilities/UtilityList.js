@@ -40,7 +40,7 @@ class UtilityList extends Component {
             email:localStorage.email
         }
         console.log(headersInfo);
-        axios.post("http://localhost:8080/GetUtilityList",data,{
+        axios.post("http://localhost:8080/GetAllUtilities",data,{
             headers:headersInfo
         }).then(function(res){
             console.log(res.data);
