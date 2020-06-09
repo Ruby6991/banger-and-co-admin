@@ -75,7 +75,7 @@ class UserDetails extends Component{
                     <button class="waves-effect waves-light btn-small red lighten-2" type="button" onClick={this.handleUpdate}>Mark as Returning</button>
                 )}
                 </td>
-                <td class="teal lighten-4"><button class="waves-effect btn-flat grey darken-2 white-text" onClick={this.viewDocs}>Docs</button></td>
+                <td class="teal lighten-4"><button class="waves-effect btn-flat grey darken-2 white-text" onClick={this.viewDocs}>Update</button></td>
             </tr>
         )
     }
